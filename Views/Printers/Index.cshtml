@@ -1,0 +1,122 @@
+@functions {
+    public class ImpresoraMock
+    {
+        public string Id { get; set; } = "";
+        public string Nombre { get; set; } = "";
+        public string Ubicacion { get; set; } = "";
+        public string IpAddress { get; set; } = "";
+        public string Estado { get; set; } = ""; // "En línea", "Error", "Mantenimiento", "Sin Conexión"
+        public int NivelPapel { get; set; }
+        public int NivelTinta { get; set; }
+    }
+}
+@{
+    ViewData["Title"] = "Monitoreo de Impresoras";
+    var impresoras = new List<ImpresoraMock>
+    {
+        new ImpresoraMock { Id = "PRN-01", Nombre = "Epson CW-C4000 (01)", Ubicacion = "Mesa Embalaje A1", IpAddress = "192.168.1.51", Estado = "En línea", NivelPapel = 85, NivelTinta = 60 },
+        new ImpresoraMock { Id = "PRN-02", Nombre = "Zebra ZT411 (02)", Ubicacion = "Mesa Embalaje B2", IpAddress = "192.168.1.52", Estado = "Error", NivelPapel = 5, NivelTinta = 45 },
+        new ImpresoraMock { Id = "PRN-03", Nombre = "Epson CW-C4000 (03)", Ubicacion = "Mesa Embalaje C1", IpAddress = "192.168.1.53", Estado = "En línea", NivelPapel = 40, NivelTinta = 90 },
+        new ImpresoraMock { Id = "PRN-04", Nombre = "Sato CL4NX (04)", Ubicacion = "Almacén Principal", IpAddress = "192.168.1.54", Estado = "Mantenimiento", NivelPapel = 0, NivelTinta = 15 },
+        new ImpresoraMock { Id = "PRN-05", Nombre = "Zebra ZT411 (05)", Ubicacion = "Recepción", IpAddress = "192.168.1.55", Estado = "Sin Conexión", NivelPapel = 0, NivelTinta = 0 }
+    };
+
+    string GetProgressColor(int value, string type = "default")
+    {
+        if (value == 0) return "bg-secondary";
+        if (value > 50) return type == "tinta" ? "bg-info" : "bg-success";
+        if (value > 20) return "bg-warning";
+        return "bg-danger progress-bar-animated progress-bar-striped";
+    }
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom">
+    <div>
+        <h2 class="h3 mb-1 fw-bold text-dark">Hardware y Dispositivos</h2>
+        <p class="text-muted mb-0"><i class="fa-solid fa-server me-1"></i> Estado y telemetría de impresoras en red</p>
+    </div>
+    <div class="mt-3 mt-md-0 d-flex gap-2">
+        <button class="btn btn-outline-secondary bg-white shadow-sm fw-bold">
+            <i class="fa-solid fa-plus me-1"></i> Agregar
+        </button>
+        <button class="btn btn-primary shadow-sm fw-bold" onclick="showToast('Sincronizando estado con los dispositivos...', 'info')">
+            <i class="fa-solid fa-arrows-rotate me-1"></i> Actualizar Todo
+        </button>
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var imp in impresoras)
+    {
+        string borderClass = imp.Estado == "Error" ? "border-danger" : 
+                             imp.Estado == "En línea" ? "border-success" : 
+                             imp.Estado == "Mantenimiento" ? "border-warning" : "border-secondary";
+        
+        string badgeClass = imp.Estado == "Error" ? "bg-danger" : 
+                            imp.Estado == "En línea" ? "bg-success" : 
+                            imp.Estado == "Mantenimiento" ? "bg-warning text-dark" : "bg-secondary";
+                            
+        string iconClass = imp.Estado == "Error" ? "fa-circle-xmark" : 
+                           imp.Estado == "En línea" ? "fa-circle-check" : 
+                           imp.Estado == "Mantenimiento" ? "fa-wrench" : "fa-plug-circle-xmark";
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm border-0 border-top border-4 @borderClass bg-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="d-flex align-items-center mb-1">
+                                <h5 class="card-title fw-bold mb-0 text-dark me-2">@imp.Nombre</h5>
+                                <span class="badge bg-light text-dark border">@imp.Id</span>
+                            </div>
+                            <div class="text-muted" style="font-size: 0.85rem;">
+                                <div class="mb-1"><i class="fa-solid fa-location-dot me-2 text-secondary"></i>@imp.Ubicacion</div>
+                                <div><i class="fa-solid fa-network-wired me-2 text-secondary"></i>@imp.IpAddress</div>
+                            </div>
+                        </div>
+                        <span class="badge @badgeClass rounded-pill shadow-sm"><i class="fa-solid @iconClass me-1"></i>@imp.Estado</span>
+                    </div>
+
+                    <hr class="text-muted" />
+
+                    <!-- Progreso Papel -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-end mb-1">
+                            <span class="fw-bold text-dark" style="font-size: 0.85rem;"><i class="fa-solid fa-scroll me-1 text-secondary"></i> Rollo de Etiquetas</span>
+                            <span class="fw-bold @(imp.NivelPapel <= 20 ? "text-danger" : "text-success")" style="font-size: 0.9rem;">@imp.NivelPapel%</span>
+                        </div>
+                        <div class="progress shadow-sm" style="height: 10px; background-color: #e2e8f0;">
+                            <div class="progress-bar @GetProgressColor(imp.NivelPapel, "papel")" role="progressbar" style="width: @imp.NivelPapel%" aria-valuenow="@imp.NivelPapel" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!-- Progreso Tinta -->
+                    <div>
+                        <div class="d-flex justify-content-between align-items-end mb-1">
+                            <span class="fw-bold text-dark" style="font-size: 0.85rem;"><i class="fa-solid fa-droplet me-1 text-secondary"></i> Nivel de Ribbon/Tinta</span>
+                            <span class="fw-bold @(imp.NivelTinta <= 20 ? "text-danger" : "text-info")" style="font-size: 0.9rem;">@imp.NivelTinta%</span>
+                        </div>
+                        <div class="progress shadow-sm" style="height: 10px; background-color: #e2e8f0;">
+                            <div class="progress-bar @GetProgressColor(imp.NivelTinta, "tinta")" role="progressbar" style="width: @imp.NivelTinta%" aria-valuenow="@imp.NivelTinta" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 pt-3 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-sm btn-outline-dark fw-bold" onclick="showToast('Imprimiendo patrón de prueba en @imp.Nombre', 'info')" @(imp.Estado != "En línea" ? "disabled" : "")>
+                            <i class="fa-solid fa-flask"></i> Test
+                        </button>
+                        <div class="btn-group shadow-sm">
+                            <button class="btn btn-sm btn-secondary fw-bold" onclick="showToast('Pausando cola en @imp.Nombre', 'warning')">
+                                <i class="fa-solid fa-pause"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger fw-bold" onclick="showToast('Reiniciando servicio de @imp.Nombre', 'danger')">
+                                <i class="fa-solid fa-power-off"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

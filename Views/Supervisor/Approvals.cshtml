@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Panel de Aprobaciones";
+    var currentRole = Context.Request.Query["role"].ToString();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+    <div>
+        <h2 class="h3 mb-1 fw-bold text-dark">Panel de Aprobaciones</h2>
+        <p class="text-muted mb-0"><i class="fa-solid fa-user-shield me-1"></i> Autorización de reimpresiones y excepciones</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold">Pendientes de Firma</h6>
+                <div class="h2 fw-bold">08</div>
+                <hr class="opacity-25">
+                <small><i class="fa-solid fa-clock me-1"></i> 3 órdenes críticas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold">Aprobadas hoy</h6>
+                <div class="h2 fw-bold">42</div>
+                <hr class="opacity-25">
+                <small><i class="fa-solid fa-check-double me-1"></i> +15% vs ayer</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-danger text-white shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold">Rechazadas</h6>
+                <div class="h2 fw-bold">02</div>
+                <hr class="opacity-25">
+                <small><i class="fa-solid fa-ban me-1"></i> Por falta de stock</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3">
+        <h6 class="m-0 fw-bold text-dark">Solicitudes de Reimpresión Especial</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Solicitante</th>
+                        <th>Orden/LPN</th>
+                        <th>Motivo</th>
+                        <th class="text-center">Urgencia</th>
+                        <th class="text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold">Juan Pérez</div>
+                            <small class="text-muted">Operador Mesa A1</small>
+                        </td>
+                        <td>LPN-99012</td>
+                        <td><span class="badge bg-light text-dark border">Etiqueta Dañada</span></td>
+                        <td class="text-center"><span class="badge bg-danger">Alta</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-success px-3" onclick="showToast('Solicitud Aprobada', 'success')">Aprobar</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="showToast('Solicitud Rechazada', 'danger')">Rechazar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold">Ana Gómez</div>
+                            <small class="text-muted">Operador Mesa B2</small>
+                        </td>
+                        <td>LPN-99015</td>
+                        <td><span class="badge bg-light text-dark border">Error de Datos</span></td>
+                        <td class="text-center"><span class="badge bg-warning text-dark">Media</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-success px-3" onclick="showToast('Solicitud Aprobada', 'success')">Aprobar</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="showToast('Solicitud Rechazada', 'danger')">Rechazar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

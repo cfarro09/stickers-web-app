@@ -1,0 +1,122 @@
+@functions {
+    public class OrdenMock
+    {
+        public string IdOrden { get; set; } = "";
+        public string Cliente { get; set; } = "";
+        public string TipoMaterial { get; set; } = "";
+        public int Cantidad { get; set; }
+        public string Estado { get; set; } = ""; // "Completado", "Pendiente", "Error"
+    }
+}
+@{
+    ViewData["Title"] = "Módulo de Impresiones";
+    var currentRole = Context.Request.Query["role"].ToString();
+    if (string.IsNullOrEmpty(currentRole)) currentRole = "Supervisor"; 
+
+    var ordenes = new List<OrdenMock>
+    {
+        new OrdenMock { IdOrden = "LPN-0099821", Cliente = "Supermercados Global S.A.", TipoMaterial = "Térmico Directo", Cantidad = 150, Estado = "Completado" },
+        new OrdenMock { IdOrden = "LPN-0099822", Cliente = "Logística Andina EIRL", TipoMaterial = "Polipropileno", Cantidad = 45, Estado = "Pendiente" },
+        new OrdenMock { IdOrden = "LPN-0099823", Cliente = "Exportaciones Agrícolas SAC", TipoMaterial = "Térmico Directo", Cantidad = 500, Estado = "Error" },
+        new OrdenMock { IdOrden = "LPN-0099824", Cliente = "TechCorp Inc.", TipoMaterial = "Poliéster Plata", Cantidad = 12, Estado = "Pendiente" },
+        new OrdenMock { IdOrden = "LPN-0099825", Cliente = "Ferretería Industrial", TipoMaterial = "Polipropileno", Cantidad = 80, Estado = "Completado" }
+    };
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom">
+    <div>
+        <h2 class="h3 mb-1 fw-bold text-dark">Módulo de Impresiones</h2>
+        <p class="text-muted mb-0"><i class="fa-solid fa-barcode me-1"></i> Escaneo y generación de etiquetas</p>
+    </div>
+</div>
+
+<!-- Buscador Principal -->
+<div class="card shadow-sm border-0 mb-4 bg-primary text-white">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-magnifying-glass me-2"></i>Buscar y Procesar Orden</h5>
+        <div class="input-group input-group-lg shadow-sm">
+            <span class="input-group-text bg-white border-0 text-primary" id="search-icon"><i class="fa-solid fa-barcode fa-lg"></i></span>
+            <input type="text" class="form-control border-0 text-dark fw-bold" style="font-size: 1.2rem;" placeholder="Escanear o ingresar Nro. de LPN..." aria-label="Buscar Orden" aria-describedby="search-icon" autofocus>
+            <button class="btn btn-dark px-4 fw-bold" type="button" onclick="showToast('Buscando orden en WMS...', 'info')">
+                <i class="fa-solid fa-magnifying-glass me-1"></i> Buscar
+            </button>
+        </div>
+        <small class="mt-2 d-block text-white-50"><i class="fa-solid fa-circle-info me-1"></i>El campo tiene autofocus para usar directamente la pistola lectora de código de barras.</small>
+    </div>
+</div>
+
+<!-- Tabla de Datos -->
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h6 class="m-0 fw-bold text-dark"><i class="fa-solid fa-list-check me-2 text-primary"></i>Órdenes en Cola de Trabajo</h6>
+        <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-filter me-1"></i> Filtrar</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-striped align-middle mb-0">
+                <thead class="table-light text-secondary" style="font-size: 0.85rem;">
+                    <tr>
+                        <th class="ps-4 py-3">LPN / ORDEN</th>
+                        <th class="py-3">CLIENTE</th>
+                        <th class="py-3">MATERIAL</th>
+                        <th class="text-center py-3">CANTIDAD</th>
+                        <th class="text-center py-3">ESTADO</th>
+                        <th class="text-center pe-4 py-3">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @foreach (var orden in ordenes)
+                    {
+                        <tr>
+                            <td class="ps-4 py-2 fw-bold text-dark">
+                                <i class="fa-solid fa-box text-muted me-2"></i>@orden.IdOrden
+                            </td>
+                            <td class="py-2 text-truncate" style="max-width: 200px;">@orden.Cliente</td>
+                            <td class="py-2"><span class="badge bg-light text-dark border"><i class="fa-solid fa-scroll me-1"></i>@orden.TipoMaterial</span></td>
+                            <td class="text-center py-2 fw-bold">@orden.Cantidad</td>
+                            <td class="text-center py-2">
+                                @if (orden.Estado == "Completado")
+                                {
+                                    <span class="badge bg-success rounded-pill px-3 shadow-sm"><i class="fa-solid fa-check me-1"></i>Impreso</span>
+                                }
+                                else if (orden.Estado == "Pendiente")
+                                {
+                                    <span class="badge bg-warning text-dark rounded-pill px-3 shadow-sm"><i class="fa-solid fa-clock me-1"></i>Pendiente</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger rounded-pill px-3 shadow-sm"><i class="fa-solid fa-triangle-exclamation me-1"></i>Error</span>
+                                }
+                            </td>
+                            <td class="text-center pe-4 py-2">
+                                <div class="btn-group shadow-sm" role="group">
+                                    <button type="button" class="btn btn-sm btn-primary fw-bold" onclick="showToast('Enviando a impresora orden @orden.IdOrden...', 'success')" @(orden.Estado == "Completado" ? "disabled" : "")>
+                                        <i class="fa-solid fa-print"></i>
+                                    </button>
+                                @if (currentRole == "Supervisor" || currentRole == "Administrador")
+                                {
+                                    <button type="button" class="btn btn-sm btn-dark" title="Reimprimir" onclick="showToast('Solicitando reimpresión para @orden.IdOrden', 'warning')">
+                                        <i class="fa-solid fa-rotate-right"></i>
+                                    </button>
+                                }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-white py-3 border-top d-flex justify-content-between align-items-center">
+        <span class="text-muted" style="font-size: 0.85rem;">Mostrando 5 de 24 registros</span>
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>

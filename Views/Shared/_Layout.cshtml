@@ -1,0 +1,245 @@
+@{
+    // Simulación de Rol para el prototipo (en una app real vendría de Claims/Identity)
+    var currentRole = Context.Request.Query["role"].ToString();
+    if (string.IsNullOrEmpty(currentRole)) currentRole = "Supervisor"; // Default
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Crosland Logística</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/crosland-logo.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-bg: #1e293b;
+            --sidebar-hover: #334155;
+            --topbar-bg: #ffffff;
+            --app-bg: #f8fafc;
+        }
+        body { 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            background-color: var(--app-bg); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .wrapper { display: flex; width: 100%; align-items: stretch; }
+        
+        #sidebar { 
+            min-width: var(--sidebar-width); 
+            max-width: var(--sidebar-width); 
+            background: var(--sidebar-bg); 
+            color: #f1f5f9; 
+            transition: all 0.3s;
+            min-height: 100vh;
+            z-index: 1000;
+        }
+        #sidebar.active { margin-left: calc(-1 * var(--sidebar-width)); }
+        #sidebar .sidebar-header { 
+            padding: 20px; 
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+        }
+        #sidebar ul.components { padding: 15px 0; }
+        #sidebar .nav-label { padding: 10px 20px; font-size: 0.75rem; text-uppercase: uppercase; color: #64748b; font-weight: 700; }
+        #sidebar ul li a { 
+            padding: 12px 20px; 
+            font-size: 0.95em; 
+            display: block; 
+            color: #cbd5e1; 
+            text-decoration: none; 
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        #sidebar ul li a:hover { color: #ffffff; background: var(--sidebar-hover); }
+        #sidebar ul li.active > a { 
+            color: #ffffff; 
+            background: #3b82f6;
+            border-left: 4px solid #bfdbfe; 
+        }
+
+        #content { width: 100%; transition: all 0.3s; display: flex; flex-direction: column; }
+        .topbar { 
+            background: var(--topbar-bg); 
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); 
+            padding: 12px 24px; 
+            z-index: 900;
+        }
+        
+        /* Contenedor con transición */
+        .main-content { padding: 24px; flex-grow: 1; }
+        
+        /* Animación HTMX */
+        .htmx-added { opacity: 0; }
+        .htmx-request { opacity: 0.6; transition: opacity 200ms ease-in; }
+        #main-content-container { transition: all 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; border-radius: 0.5rem; }
+        .metric-card { transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .icon-large { font-size: 2.5rem; opacity: 0.2; }
+        
+        @@media (max-width: 768px) {
+            #sidebar { margin-left: calc(-1 * var(--sidebar-width)); position: absolute; height: 100%; }
+            #sidebar.active { margin-left: 0; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+        }
+
+        .role-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .role-Supervisor { background: #dcfce7; color: #166534; }
+        .role-Operador { background: #dbeafe; color: #1e40af; }
+        .role-Administrador { background: #fef3c7; color: #92400e; }
+        .role-Comercial { background: #f3e8ff; color: #6b21a8; }
+    </style>
+</head>
+<body hx-boost="true">
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header d-flex justify-content-center align-items-center py-4">
+                <img src="/images/crosland-logo.svg?v=3" alt="Crosland" style="max-width: 85%; max-height: 90px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));" />
+            </div>
+            <ul class="list-unstyled components">
+                @if (currentRole == "Administrador")
+                {
+                    <!-- Módulo 1: Gestión de Usuarios -->
+                    <div class="nav-label mt-2">1. Gestión de Usuarios</div>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "active" : "")">
+                        <a href="/admin/users?role=@currentRole" hx-get="/admin/users?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-users-gear me-3 w-20px text-center"></i> Directorio y Accesos</a>
+                    </li>
+                }
+
+                @if (currentRole == "Administrador" || currentRole == "Supervisor" || currentRole == "Operador")
+                {
+                    <!-- Módulo 2: Logística -->
+                    <div class="nav-label mt-2">2. Logística</div>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <a href="/dashboard?role=@currentRole" hx-get="/dashboard?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-pie me-3 w-20px text-center"></i> Dashboard</a>
+                    </li>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" ? "active" : "")">
+                        <a href="/printing?role=@currentRole" hx-get="/printing?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-barcode me-3 w-20px text-center"></i> Impresiones</a>
+                    </li>
+                    @if (currentRole == "Administrador" || currentRole == "Supervisor")
+                    {
+                        <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supervisor" ? "active" : "")">
+                            <a href="/supervisor/approvals?role=@currentRole" hx-get="/supervisor/approvals?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-clipboard-check me-3 w-20px text-center"></i> Aprobaciones</a>
+                        </li>
+                        <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printers" ? "active" : "")">
+                            <a href="/printers?role=@currentRole" hx-get="/printers?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-print me-3 w-20px text-center"></i> Impresoras</a>
+                        </li>
+                    }
+                }
+
+                @if (currentRole == "Administrador" || currentRole == "Vendedor")
+                {
+                    <!-- Módulo 3: Vendedor -->
+                    <div class="nav-label mt-2">3. Vendedor</div>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                        <a href="/seller?role=@currentRole" hx-get="/seller?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-qrcode me-3 w-20px text-center"></i> Lectura QR</a>
+                    </li>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "History" ? "active" : "")">
+                        <a href="/seller/history?role=@currentRole" hx-get="/seller/history?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-line me-3 w-20px text-center"></i> Seguimiento General</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand-lg topbar d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button type="button" id="sidebarCollapse" class="btn btn-light border shadow-sm me-3">
+                        <i class="fa-solid fa-bars text-secondary"></i>
+                    </button>
+                    <!-- SIMULADOR DE ROLES PARA EL PROTOTIPO -->
+                    <div class="dropdown d-none d-md-block" hx-boost="false">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user-gear me-1"></i> Perfil: <strong>@currentRole</strong>
+                        </button>
+                        <ul class="dropdown-menu shadow">
+                            <li><h6 class="dropdown-header">Cambiar Rol (Prototipo)</h6></li>
+                            <li><a class="dropdown-item" href="?role=Administrador">Administrador</a></li>
+                            <li><a class="dropdown-item" href="?role=Supervisor">Supervisor Logístico</a></li>
+                            <li><a class="dropdown-item" href="?role=Operador">Operador Logístico</a></li>
+                            <li><a class="dropdown-item" href="?role=Vendedor">Vendedor</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="me-4 text-end d-none d-md-block">
+                        <span class="d-block fw-bold text-dark" style="font-size: 0.95rem;">Carlos Mendoza</span>
+                        <span class="role-badge role-@currentRole">@currentRole</span>
+                    </div>
+                    <button class="btn btn-outline-danger fw-bold" onclick="showToast('Cerrando sesión...', 'danger')">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> <span class="d-none d-md-inline">Salir</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main Dynamic Content Container -->
+            <div id="main-content-container" class="main-content fade-in">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="liveToast" class="toast shadow-lg border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-white" id="toastHeader">
+                <i class="fa-solid fa-bell me-2" id="toastIcon"></i>
+                <strong class="me-auto" id="toastTitle">Sistema</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body fw-bold bg-white text-dark rounded-bottom" id="toastBody">
+                Mensaje
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@@1.9.10"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+            // Manejo de clase 'active' para Sidebar con HTMX
+            document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+                $('.nav-item-link').removeClass('active');
+                const path = window.location.pathname;
+                $(`.nav-item-link a[href^="${path}"]`).parent().addClass('active');
+                
+                // Reiniciar animaciones
+                $('#main-content-container').removeClass('fade-in');
+                void document.getElementById('main-content-container').offsetWidth;
+                $('#main-content-container').addClass('fade-in');
+            });
+        });
+
+        function showToast(message, type = 'info') {
+            const toastEl = document.getElementById('liveToast');
+            const toastHeader = document.getElementById('toastHeader');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastTitle = document.getElementById('toastTitle');
+            document.getElementById('toastBody').innerText = message;
+            toastHeader.className = 'toast-header text-white';
+            if(type === 'success') { toastHeader.classList.add('bg-success'); toastIcon.className = 'fa-solid fa-check me-2'; toastTitle.innerText = 'Éxito'; }
+            else if(type === 'warning') { toastHeader.classList.add('bg-warning', 'text-dark'); toastIcon.className = 'fa-solid fa-exclamation me-2'; }
+            else if(type === 'danger') { toastHeader.classList.add('bg-danger'); toastIcon.className = 'fa-solid fa-times me-2'; }
+            else { toastHeader.classList.add('bg-primary'); }
+            new bootstrap.Toast(toastEl).show();
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
