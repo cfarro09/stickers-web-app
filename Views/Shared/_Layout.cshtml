@@ -1,7 +1,7 @@
 @{
     // Simulación de Rol para el prototipo (en una app real vendría de Claims/Identity)
     var currentRole = Context.Request.Query["role"].ToString();
-    if (string.IsNullOrEmpty(currentRole)) currentRole = "Supervisor"; // Default
+    if (string.IsNullOrEmpty(currentRole)) currentRole = "Administrador"; // Default
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -86,8 +86,8 @@
         .icon-large { font-size: 2.5rem; opacity: 0.2; }
         
         @@media (max-width: 768px) {
-            #sidebar { margin-left: calc(-1 * var(--sidebar-width)); position: absolute; height: 100%; }
-            #sidebar.active { margin-left: 0; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+            #sidebar { margin-left: calc(-1 * var(--sidebar-width)); position: absolute; height: 100%; z-index: 1000; }
+            #sidebar.active { margin-left: 0; box-shadow: 4px 0 25px rgba(0,0,0,0.3); }
         }
 
         .role-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
@@ -101,8 +101,11 @@
     <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
-            <div class="sidebar-header d-flex justify-content-center align-items-center py-4">
+            <div class="sidebar-header d-flex justify-content-center align-items-center py-4 position-relative">
                 <img src="/images/crosland-logo.svg?v=3" alt="Crosland" style="max-width: 85%; max-height: 90px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));" />
+                <button type="button" class="btn btn-link text-white d-md-none border-0 p-0 fs-3 position-absolute" id="sidebarCloseBtn" style="right: 15px; top: 15px; text-decoration: none;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <ul class="list-unstyled components">
                 @if (currentRole == "Administrador")
@@ -158,9 +161,9 @@
                         <i class="fa-solid fa-bars text-secondary"></i>
                     </button>
                     <!-- SIMULADOR DE ROLES PARA EL PROTOTIPO -->
-                    <div class="dropdown d-none d-md-block" hx-boost="false">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-user-gear me-1"></i> Perfil: <strong>@currentRole</strong>
+                    <div class="dropdown" hx-boost="false">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user-gear me-1"></i> <span class="d-none d-sm-inline">Perfil: </span><strong>@currentRole</strong>
                         </button>
                         <ul class="dropdown-menu shadow">
                             <li><h6 class="dropdown-header">Cambiar Rol (Prototipo)</h6></li>
@@ -213,11 +216,28 @@
                 $('#sidebar').toggleClass('active');
             });
 
+            // Botón de cierre manual en móviles (X)
+            $('#sidebarCloseBtn').on('click', function () {
+                $('#sidebar').removeClass('active');
+            });
+
+            // Cerrar sidebar al hacer click en cualquier link de navegación en móviles
+            $(document).on('click', '#sidebar ul.components li a', function () {
+                if ($(window).width() <= 768) {
+                    $('#sidebar').removeClass('active');
+                }
+            });
+
             // Manejo de clase 'active' para Sidebar con HTMX
             document.body.addEventListener('htmx:afterOnLoad', function(evt) {
                 $('.nav-item-link').removeClass('active');
-                const path = window.location.pathname;
-                $(`.nav-item-link a[href^="${path}"]`).parent().addClass('active');
+                const currentPath = window.location.pathname.toLowerCase();
+                
+                $('.nav-item-link a').each(function() {
+                    if (this.pathname.toLowerCase() === currentPath) {
+                        $(this).parent().addClass('active');
+                    }
+                });
                 
                 // Reiniciar animaciones
                 $('#main-content-container').removeClass('fade-in');
