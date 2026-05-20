@@ -91,10 +91,11 @@
         }
 
         .role-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .role-Administrador { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
         .role-Supervisor { background: #dcfce7; color: #166534; }
         .role-Operador { background: #dbeafe; color: #1e40af; }
-        .role-Administrador { background: #fef3c7; color: #92400e; }
-        .role-Comercial { background: #f3e8ff; color: #6b21a8; }
+        .role-SupervisorComercial { background: #fef9c3; color: #713f12; }
+        .role-VisualizadorComercial { background: #fae8ff; color: #701a75; }
     </style>
 </head>
 <body hx-boost="true">
@@ -121,11 +122,17 @@
                 {
                     <!-- Módulo 2: Logística -->
                     <div class="nav-label mt-2">2. Logística</div>
-                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
-                        <a href="/dashboard?role=@currentRole" hx-get="/dashboard?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-pie me-3 w-20px text-center"></i> Dashboard</a>
-                    </li>
-                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" ? "active" : "")">
+                    @if (currentRole == "Administrador" || currentRole == "Supervisor")
+                    {
+                        <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                            <a href="/dashboard?role=@currentRole" hx-get="/dashboard?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-pie me-3 w-20px text-center"></i> Dashboard</a>
+                        </li>
+                    }
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
                         <a href="/printing?role=@currentRole" hx-get="/printing?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-barcode me-3 w-20px text-center"></i> Impresiones</a>
+                    </li>
+                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" && ViewContext.RouteData.Values["Action"]?.ToString() == "Link" ? "active" : "")">
+                        <a href="/printing/link?role=@currentRole" hx-get="/printing/link?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-link me-3 w-20px text-center"></i> Enlace Impresora</a>
                     </li>
                     @if (currentRole == "Administrador" || currentRole == "Supervisor")
                     {
@@ -138,16 +145,22 @@
                     }
                 }
 
-                @if (currentRole == "Administrador" || currentRole == "Vendedor")
+                @if (currentRole == "Administrador" || currentRole == "Supervisor Comercial" || currentRole == "Visualizador Comercial")
                 {
-                    <!-- Módulo 3: Vendedor -->
-                    <div class="nav-label mt-2">3. Vendedor</div>
-                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
-                        <a href="/seller?role=@currentRole" hx-get="/seller?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-qrcode me-3 w-20px text-center"></i> Lectura QR</a>
-                    </li>
-                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "History" ? "active" : "")">
-                        <a href="/seller/history?role=@currentRole" hx-get="/seller/history?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-line me-3 w-20px text-center"></i> Seguimiento General</a>
-                    </li>
+                    <!-- Módulo 3: Comercial -->
+                    <div class="nav-label mt-2">3. Comercial</div>
+                    @if (currentRole == "Administrador" || currentRole == "Visualizador Comercial")
+                    {
+                        <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                            <a href="/seller?role=@currentRole" hx-get="/seller?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-qrcode me-3 w-20px text-center"></i> Lectura QR</a>
+                        </li>
+                    }
+                    @if (currentRole == "Administrador" || currentRole == "Supervisor Comercial")
+                    {
+                        <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seller" && ViewContext.RouteData.Values["Action"]?.ToString() == "History" ? "active" : "")">
+                            <a href="/seller/history?role=@currentRole" hx-get="/seller/history?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-chart-line me-3 w-20px text-center"></i> Seguimiento General</a>
+                        </li>
+                    }
                 }
             </ul>
         </nav>
@@ -170,7 +183,8 @@
                             <li><a class="dropdown-item" href="?role=Administrador">Administrador</a></li>
                             <li><a class="dropdown-item" href="?role=Supervisor">Supervisor Logístico</a></li>
                             <li><a class="dropdown-item" href="?role=Operador">Operador Logístico</a></li>
-                            <li><a class="dropdown-item" href="?role=Vendedor">Vendedor</a></li>
+                            <li><a class="dropdown-item" href="?role=Supervisor%20Comercial">Supervisor Comercial</a></li>
+                            <li><a class="dropdown-item" href="?role=Visualizador%20Comercial">Visualizador Comercial</a></li>
                         </ul>
                     </div>
                 </div>
@@ -178,7 +192,7 @@
                 <div class="d-flex align-items-center">
                     <div class="me-4 text-end d-none d-md-block">
                         <span class="d-block fw-bold text-dark" style="font-size: 0.95rem;">Carlos Mendoza</span>
-                        <span class="role-badge role-@currentRole">@currentRole</span>
+                        <span class="role-badge role-@(currentRole.Replace(" ", ""))">@currentRole</span>
                     </div>
                     <button class="btn btn-outline-danger fw-bold" onclick="showToast('Cerrando sesión...', 'danger')">
                         <i class="fa-solid fa-right-from-bracket me-1"></i> <span class="d-none d-md-inline">Salir</span>

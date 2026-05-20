@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Enlace con Impresora";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+    <div>
+        <h2 class="h3 mb-1 fw-bold text-dark">Enlace de Terminales</h2>
+        <p class="text-muted mb-0"><i class="fa-solid fa-link me-1"></i> Asociación dinámica de PDAs y Estaciones de Trabajo</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                <i class="fa-solid fa-network-wired text-primary fs-5 me-2"></i>
+                <h6 class="m-0 fw-bold text-dark">Vincular Estación e Impresora (PDA)</h6>
+            </div>
+            <div class="card-body p-4">
+                <div id="linkForm">
+                    <!-- Selector de Estación de Trabajo -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted small text-uppercase">Estación de Trabajo</label>
+                        <select id="workstationSelect" class="form-select border-2" required>
+                            <option value="" disabled>Seleccione estación de trabajo...</option>
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                var val = $"Estación de Trabajo N° {i:D2}";
+                                if (i == 1)
+                                {
+                                    <option value="@val" selected>@val (Predeterminada)</option>
+                                }
+                                else
+                                {
+                                    <option value="@val">@val</option>
+                                }
+                            }
+                        </select>
+                        <div class="form-text">La estación identifica físicamente la ubicación en el almacén.</div>
+                    </div>
+
+                    <!-- Selector de PDA -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted small text-uppercase">Terminal Móvil (PDA / Handheld)</label>
+                        <select id="pdaSelect" class="form-select border-2" required>
+                            <option value="" selected disabled>Seleccione terminal PDA...</option>
+                            @for (int i = 1; i <= 30; i++)
+                            {
+                                var pdaVal = $"PDA-{i:D3}";
+                                <option value="@pdaVal">@pdaVal</option>
+                            }
+                        </select>
+                        <div class="form-text">Seleccione el código de la PDA activa asignada a su turno.</div>
+                    </div>
+
+                    <button type="button" onclick="handleLinkSubmit()" class="btn btn-primary w-100 py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-circle-check me-2 fs-5"></i> Enlazar Estación
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerta de Enlace Exitoso (Oculta por defecto) -->
+        <div id="successPanel" class="card border-0 bg-success bg-opacity-10 text-success p-4 shadow-sm d-none animate-fade-in" style="border-left: 5px solid #198754 !important;">
+            <div class="d-flex align-items-start">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3 p-2" style="width: 45px; height: 45px; flex-shrink: 0;">
+                    <i class="fa-solid fa-check fs-4"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1 text-success">¡Enlace Exitoso!</h5>
+                    <p class="mb-3 text-dark-emphasis">
+                        La estación <strong id="lblWorkstation" class="text-dark">Estación de Trabajo N° 01</strong> ha quedado correctamente vinculada con la terminal <strong id="lblPda" class="text-dark">PDA-001</strong>.
+                    </p>
+                    <hr class="opacity-10 my-2">
+                    <div class="d-flex align-items-center text-success-emphasis fw-semibold small">
+                        <span class="spinner-grow spinner-grow-sm text-success me-2" role="status" style="width: 0.75rem; height: 0.75rem;"></span>
+                        <span>Ya puede proceder a escanear los LPN para su respectiva impresión.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleLinkSubmit() {
+        const workstation = document.getElementById('workstationSelect').value;
+        const pda = document.getElementById('pdaSelect').value;
+        
+        if (!workstation || !pda) {
+            showToast('Por favor complete la selección', 'warning');
+            return;
+        }
+
+        // Simular llamada de enlace
+        showToast('Enlazando terminal...', 'info');
+        
+        setTimeout(() => {
+            document.getElementById('lblWorkstation').innerText = workstation;
+            document.getElementById('lblPda').innerText = pda;
+            
+            // Mostrar panel de éxito
+            const successPanel = document.getElementById('successPanel');
+            successPanel.classList.remove('d-none');
+            
+            // Animación suave de entrada
+            successPanel.style.opacity = 0;
+            successPanel.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => { successPanel.style.opacity = 1; }, 50);
+
+            showToast('Estación enlazada correctamente', 'success');
+        }, 600);
+    }
+</script>

@@ -93,12 +93,18 @@
                                     <button type="button" class="btn btn-sm btn-primary fw-bold" onclick="showToast('Enviando a impresora orden @orden.IdOrden...', 'success')" @(orden.Estado == "Completado" ? "disabled" : "")>
                                         <i class="fa-solid fa-print"></i>
                                     </button>
-                                @if (currentRole == "Supervisor" || currentRole == "Administrador")
-                                {
-                                    <button type="button" class="btn btn-sm btn-dark" title="Reimprimir" onclick="showToast('Solicitando reimpresión para @orden.IdOrden', 'warning')">
-                                        <i class="fa-solid fa-rotate-right"></i>
-                                    </button>
-                                }
+                                    @if (currentRole == "Operador")
+                                    {
+                                        <button type="button" class="btn btn-sm btn-dark" title="Solicitar Reimpresión" onclick="showToast('Solicitud de reimpresión para @orden.IdOrden enviada a aprobación del Supervisor', 'warning')">
+                                            <i class="fa-solid fa-rotate-right"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-sm btn-dark" title="Reimprimir" onclick="showToast('Reimpresión de @orden.IdOrden procesada con éxito', 'success')">
+                                            <i class="fa-solid fa-rotate-right"></i>
+                                        </button>
+                                    }
                                 </div>
                             </td>
                         </tr>

@@ -93,6 +93,93 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+                                            GR
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Gustavo Rivas</div>
+                                            <small class="text-muted">grivas@@crosland.pe</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1">Administrador</span></td>
+                                <td><span class="text-muted"><i class="fa-solid fa-shield-halved me-1"></i> TI Soporte</span></td>
+                                <td><span class="badge bg-success rounded-pill px-2">Activo</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Modo edición activado', 'info')"><i class="fa-solid fa-pen me-2 text-primary"></i> Editar Roles</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Correo de reset enviado', 'success')"><i class="fa-solid fa-key me-2 text-warning"></i> Reset Password</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#" onclick="showToast('Usuario suspendido', 'danger')"><i class="fa-solid fa-ban me-2"></i> Suspender</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+                                            LT
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Luis Torres</div>
+                                            <small class="text-muted">ltorres@@crosland.pe</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 px-2 py-1">Supervisor Comercial</span></td>
+                                <td><span class="text-muted"><i class="fa-solid fa-chart-line me-1"></i> Oficina Lima</span></td>
+                                <td><span class="badge bg-success rounded-pill px-2">Activo</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Modo edición activado', 'info')"><i class="fa-solid fa-pen me-2 text-primary"></i> Editar Roles</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Correo de reset enviado', 'success')"><i class="fa-solid fa-key me-2 text-warning"></i> Reset Password</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#" onclick="showToast('Usuario suspendido', 'danger')"><i class="fa-solid fa-ban me-2"></i> Suspender</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+                                            SP
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">Sofía Peralta</div>
+                                            <small class="text-muted">speralta@@crosland.pe</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1">Visualizador Comercial</span></td>
+                                <td><span class="text-muted"><i class="fa-solid fa-shop me-1"></i> Tienda Sur</span></td>
+                                <td><span class="badge bg-success rounded-pill px-2">Activo</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-light border" type="button" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Modo edición activado', 'info')"><i class="fa-solid fa-pen me-2 text-primary"></i> Editar Roles</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="showToast('Correo de reset enviado', 'success')"><i class="fa-solid fa-key me-2 text-warning"></i> Reset Password</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#" onclick="showToast('Usuario suspendido', 'danger')"><i class="fa-solid fa-ban me-2"></i> Suspender</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -132,10 +219,11 @@
                         <label class="form-label fw-semibold text-muted small text-uppercase">Rol del Sistema</label>
                         <select class="form-select">
                             <option selected disabled>Seleccionar rol...</option>
-                            <option value="1">Operador Logístico</option>
-                            <option value="2">Supervisor de Turno</option>
-                            <option value="3">Administrador IT</option>
-                            <option value="4">Comercial</option>
+                            <option value="1">Administrador IT</option>
+                            <option value="2">Supervisor Logístico</option>
+                            <option value="3">Operador Logístico</option>
+                            <option value="4">Supervisor Comercial</option>
+                            <option value="5">Visualizador Comercial</option>
                         </select>
                     </div>
                     <div class="mb-4">

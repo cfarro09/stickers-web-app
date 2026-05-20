@@ -12,4 +12,13 @@ public class PrintingController : Controller
         }
         return View();
     }
+
+    public IActionResult Link()
+    {
+        if (Request.Headers.ContainsKey("HX-Request"))
+        {
+            return PartialView();
+        }
+        return View();
+    }
 }
