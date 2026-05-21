@@ -18,25 +18,14 @@
             </div>
             <div class="card-body p-4">
                 <div id="linkForm">
-                    <!-- Selector de Estación de Trabajo -->
+                    <!-- Estación de Trabajo (Configurada por PC / LocalStorage) -->
                     <div class="mb-3">
-                        <label class="form-label fw-semibold text-muted small text-uppercase">Estación de Trabajo</label>
-                        <select id="workstationSelect" class="form-select border-2" required>
-                            <option value="" disabled>Seleccione estación de trabajo...</option>
-                            @for (int i = 1; i <= 10; i++)
-                            {
-                                var val = $"Estación de Trabajo N° {i:D2}";
-                                if (i == 1)
-                                {
-                                    <option value="@val" selected>@val (Predeterminada)</option>
-                                }
-                                else
-                                {
-                                    <option value="@val">@val</option>
-                                }
-                            }
-                        </select>
-                        <div class="form-text">La estación identifica físicamente la ubicación en el almacén.</div>
+                        <label class="form-label fw-semibold text-muted small text-uppercase">Estación de Trabajo Activa (Esta PC)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-secondary"><i class="fa-solid fa-desktop"></i></span>
+                            <input type="text" id="workstationDisplay" class="form-control bg-light fw-bold text-dark border-2" readonly>
+                        </div>
+                        <div class="form-text text-muted"><i class="fa-solid fa-circle-info me-1"></i> Estación fija configurada localmente para este equipo.</div>
                     </div>
 
                     <!-- Selector de PDA -->
@@ -83,12 +72,25 @@
 </div>
 
 <script>
+    // Inicializar Estación de Trabajo desde LocalStorage o predeterminada (Estación N° 01)
+    (function() {
+        let currentWS = localStorage.getItem('workstation');
+        if (!currentWS) {
+            currentWS = 'Estación de Trabajo N° 01';
+            localStorage.setItem('workstation', currentWS);
+        }
+        setTimeout(() => {
+            const el = document.getElementById('workstationDisplay');
+            if (el) el.value = currentWS;
+        }, 50);
+    })();
+
     function handleLinkSubmit() {
-        const workstation = document.getElementById('workstationSelect').value;
+        const workstation = document.getElementById('workstationDisplay').value;
         const pda = document.getElementById('pdaSelect').value;
         
         if (!workstation || !pda) {
-            showToast('Por favor complete la selección', 'warning');
+            showToast('Por favor seleccione una terminal PDA', 'warning');
             return;
         }
 

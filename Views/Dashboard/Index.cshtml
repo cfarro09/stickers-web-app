@@ -26,10 +26,13 @@
     </div>
 </div>
 
-<!-- Tarjetas de Métricas -->
+<!-- Sección 1: Producción de Impresión Estándar -->
+<div class="mb-3">
+    <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-industry me-2 text-primary"></i>Producción de Impresión Estándar</h5>
+</div>
 <div class="row mb-4">
     <!-- Stickers Usados/Planificados -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card metric-card border-0 shadow-sm border-start border-primary border-4 h-100 py-2 bg-white">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -48,13 +51,13 @@
         </div>
     </div>
 
-    <!-- Acumulado del Día -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <!-- Acumulado del Día (Normal) -->
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card metric-card border-0 shadow-sm border-start border-success border-4 h-100 py-2 bg-white">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs fw-bold text-success text-uppercase mb-1" style="font-size: 0.75rem;">Acumulado del Día</div>
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1" style="font-size: 0.75rem;">Impresiones del Día (Estándar)</div>
                         <div class="h4 mb-0 fw-bold text-dark" id="metric-acumulado">1,250 <span class="text-muted fs-6 fw-normal">Und.</span></div>
                         <div class="mt-2 text-success" id="metric-acumulado-trend" style="font-size: 0.8rem;">
                             <i class="fa-solid fa-arrow-trend-up me-1"></i> 12% más que ayer
@@ -68,13 +71,13 @@
         </div>
     </div>
 
-    <!-- Acumulado del Mes -->
-    <div class="col-xl-3 col-md-6 mb-4">
+    <!-- Acumulado del Mes (Normal) -->
+    <div class="col-xl-4 col-md-12 mb-4">
         <div class="card metric-card border-0 shadow-sm border-start border-info border-4 h-100 py-2 bg-white">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs fw-bold text-info text-uppercase mb-1" style="font-size: 0.75rem;">Acumulado del Mes</div>
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1" style="font-size: 0.75rem;">Impresiones del Mes (Estándar)</div>
                         <div class="h4 mb-0 fw-bold text-dark">35,400 <span class="text-muted fs-6 fw-normal">Und.</span></div>
                         <div class="mt-2 text-muted" style="font-size: 0.8rem;">
                             <i class="fa-solid fa-calendar-check me-1"></i> Mes Actual
@@ -87,14 +90,20 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Reimpresiones Pendientes -->
-    <div class="col-xl-3 col-md-6 mb-4">
+<!-- Sección 2: Control de Reimpresiones e Incidencias -->
+<div class="mb-3">
+    <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-rotate-right me-2 text-danger"></i>Control de Reimpresiones e Incidencias</h5>
+</div>
+<div class="row mb-4">
+    <!-- Solicitudes Pendientes -->
+    <div class="col-xl-4 col-md-6 mb-4">
         <div class="card metric-card border-0 shadow-sm border-start border-danger border-4 h-100 py-2 bg-white">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs fw-bold text-danger text-uppercase mb-1" style="font-size: 0.75rem;">Reimpresiones</div>
+                        <div class="text-xs fw-bold text-danger text-uppercase mb-1" style="font-size: 0.75rem;">Aprobaciones Pendientes</div>
                         <div class="h4 mb-0 fw-bold text-danger" id="metric-reimpresiones">12 <span class="text-muted fs-6 fw-normal">Alertas</span></div>
                         <div class="mt-2 text-danger fw-bold" style="font-size: 0.8rem;">
                             <i class="fa-solid fa-circle-exclamation me-1"></i> Requieren atención
@@ -102,6 +111,46 @@
                     </div>
                     <div class="col-auto">
                         <i class="fa-solid fa-triangle-exclamation icon-large text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reimpresiones del Día -->
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card metric-card border-0 shadow-sm border-start border-warning border-4 h-100 py-2 bg-white">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1" style="font-size: 0.75rem;">Reimpresiones del Día</div>
+                        <div class="h4 mb-0 fw-bold text-dark" id="metric-reimpresiones-dia">84 <span class="text-muted fs-6 fw-normal">Und.</span></div>
+                        <div class="mt-2 text-muted" style="font-size: 0.8rem;">
+                            <i class="fa-solid fa-clock-rotate-left me-1"></i> Hoy
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-redo icon-large text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reimpresiones del Mes -->
+    <div class="col-xl-4 col-md-12 mb-4">
+        <div class="card metric-card border-0 shadow-sm border-start border-dark border-4 h-100 py-2 bg-white">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-dark text-uppercase mb-1" style="font-size: 0.75rem;">Reimpresiones del Mes</div>
+                        <div class="h4 mb-0 fw-bold text-dark" id="metric-reimpresiones-mes">1,820 <span class="text-muted fs-6 fw-normal">Und.</span></div>
+                        <div class="mt-2 text-muted" style="font-size: 0.8rem;">
+                            <i class="fa-solid fa-chart-bar me-1"></i> Acumulado mensual
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-chart-line icon-large text-dark"></i>
                     </div>
                 </div>
             </div>
@@ -183,10 +232,10 @@
             doughnutChartInstance = new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Térmico Directo', 'Polipropileno', 'Poliéster Plata'],
+                    labels: ['Estándar (Normal)', 'Resistente a Aceites'],
                     datasets: [{
-                        data: [60, 30, 10],
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                        data: [75, 25],
+                        backgroundColor: ['#3b82f6', '#10b981'],
                         hoverOffset: 4,
                         borderWidth: 0
                     }]
@@ -213,9 +262,10 @@
                 areaChartInstance.data.datasets[0].data = newDataArea;
                 areaChartInstance.update();
 
-                // Actualizar gráfica de anillo
-                const newDataDoughnut = [Math.floor(Math.random() * 50) + 20, Math.floor(Math.random() * 40) + 10, Math.floor(Math.random() * 20) + 5];
-                doughnutChartInstance.data.datasets[0].data = newDataDoughnut;
+                // Actualizar gráfica de anillo (solo 2 materiales)
+                const normal = Math.floor(Math.random() * 30) + 60; // 60% - 90%
+                const aceites = 100 - normal;
+                doughnutChartInstance.data.datasets[0].data = [normal, aceites];
                 doughnutChartInstance.update();
 
                 // Actualizar métricas texto (Dashboard interactivo real)
@@ -238,7 +288,12 @@
                 }
 
                 document.getElementById('metric-reimpresiones').innerHTML = Math.floor(Math.random() * 15) + ' <span class="text-muted fs-6 fw-normal">Alertas</span>';
-
+                
+                const repDia = Math.floor(Math.random() * 50 + 50);
+                document.getElementById('metric-reimpresiones-dia').innerHTML = repDia + ' <span class="text-muted fs-6 fw-normal">Und.</span>';
+                
+                const repMes = Math.floor(Math.random() * 500 + 1500);
+                document.getElementById('metric-reimpresiones-mes').innerHTML = repMes + ' <span class="text-muted fs-6 fw-normal">Und.</span>';
             }, 600);
         }
     </script>
