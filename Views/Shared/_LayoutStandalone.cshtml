@@ -1,0 +1,85 @@
+@{
+    var currentRole = Context.Request.Query["role"].ToString();
+    if (string.IsNullOrEmpty(currentRole)) currentRole = "Administrador";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Crosland Logística</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/crosland-logo.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card { box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; border-radius: 0.5rem; }
+        .standalone-header {
+            background: #1e293b;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+        }
+        .standalone-header img { height: 40px; object-fit: contain; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5)); }
+        .main-content { padding: 32px 24px; }
+        .user-info { line-height: 1.2; }
+        .user-info .name { font-size: 0.95rem; font-weight: 600; color: #f1f5f9; }
+        .user-info .role { font-size: 0.72rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <!-- Header mínimo sin sidebar -->
+    <header class="standalone-header justify-content-between">
+        <img src="/images/crosland-logo.svg?v=3" alt="Crosland" />
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-circle-user fs-4 text-slate-400" style="color:#94a3b8;"></i>
+            <div class="user-info">
+                <div class="name">Carlos Mendoza</div>
+                <div class="role">@currentRole</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="liveToast" class="toast shadow-lg border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header text-white" id="toastHeader">
+                <i class="fa-solid fa-bell me-2" id="toastIcon"></i>
+                <strong class="me-auto" id="toastTitle">Sistema</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body fw-bold bg-white text-dark rounded-bottom" id="toastBody">
+                Mensaje
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showToast(message, type = 'info') {
+            const toastEl = document.getElementById('liveToast');
+            const toastHeader = document.getElementById('toastHeader');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastTitle = document.getElementById('toastTitle');
+            document.getElementById('toastBody').innerText = message;
+            toastHeader.className = 'toast-header text-white';
+            if (type === 'success') { toastHeader.classList.add('bg-success'); toastIcon.className = 'fa-solid fa-check me-2'; toastTitle.innerText = 'Éxito'; }
+            else if (type === 'warning') { toastHeader.classList.add('bg-warning', 'text-dark'); toastIcon.className = 'fa-solid fa-exclamation me-2'; }
+            else if (type === 'danger') { toastHeader.classList.add('bg-danger'); toastIcon.className = 'fa-solid fa-times me-2'; }
+            else { toastHeader.classList.add('bg-primary'); }
+            new bootstrap.Toast(toastEl).show();
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
