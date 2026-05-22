@@ -131,9 +131,6 @@
                     <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
                         <a href="/printing?role=@currentRole" hx-get="/printing?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-barcode me-3 w-20px text-center"></i> Impresiones</a>
                     </li>
-                    <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Printing" && ViewContext.RouteData.Values["Action"]?.ToString() == "Link" ? "active" : "")">
-                        <a href="/printing/link?role=@currentRole" hx-get="/printing/link?role=@currentRole" hx-target="#main-content-container" hx-push-url="true"><i class="fa-solid fa-link me-3 w-20px text-center"></i> Enlace Impresora</a>
-                    </li>
                     @if (currentRole == "Administrador" || currentRole == "Supervisor")
                     {
                         <li class="mb-1 nav-item-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Supervisor" ? "active" : "")">
